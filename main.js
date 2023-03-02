@@ -73,58 +73,112 @@
 	// Define the required ten functions below this line...
     //1 - Create a function called getGuntherCount() which returns the total number of episodes 
     // where the character Gunther is mentioned in the episode summary.
+    /**
+     * 
+     * @param {JSON} json 
+     */
     function getGuntherCount(json) {
-        console.log
+        return json._embedded.episodes.filter(episode => episode.summary.includes("Gunther")).length
     }
 
     //2 - Create a function called getTotalRuntimeMinutes() that totals all runtime minutes for all episodes
+    /**
+     * 
+     * @param {JSON} json 
+     */
     function getTotalRuntimeMinutes(json) {
-
+        return json._embedded.episodes.map(episode => episode.runtime).reduce((x, y) => x + y, 0)
     }
 
     //3 - Create a function called getDateRangeEpisodeCount() that returns the number of episodes that aired in the year 2000
+    /**
+     * 
+     * @param {JSON} json 
+     * @param {String} title
+     */
     function getTotalEpisodesInYear(json, year) {
-
+        return json._embedded.episodes.filter(episode => episode.airdate.includes(year)).length
     }
 
     //4 - Create a function called getFemaleCastMembers() that returns an array of the names of the female cast members.
+    /**
+     * 
+     * @param {JSON} json 
+     */
     function getFemaleCastMembers(json) {
-
+        return json._embedded.cast.filter(cast => cast.person.gender == "Female").map(cast => cast.person.name)
     }
 
     //5 - Create a function called getEpisodeTitles() which returns a list of episode
     //    where the argument string is found in the episode summary.
+    /**
+     * 
+     * @param {JSON} json 
+     * @param {String} title
+     */
     function getEpisodeTitles(json, title) {
-
+        return json._embedded.episodes.filter(episode => episode.summary.includes(title))
     }
 
     //6 - Create a function called getCastMembersOver55() which returns a list of cast members
     //    who are currently older than 55 years of age.
+    /**
+     * 
+     * @param {JSON} json 
+     */
     function getCastMembersOver55(json) {
-
+        return json._embedded.cast.filter(cast => ((Date.now() - new Date(cast.person.birthday)) / 31556952000 > 55))
     }
 
     //7 - Create a function called getTotalRuntimeMinutesExcludingSeasonSix that gets the total 
     //    runtime minutes for all episodes excluding episodes in season 6
+    /**
+     * 
+     * @param {JSON} json 
+     */
     function getTotalRuntimeMinutesExcludingSeasonSix(json) {
-
+        return json._embedded.episodes.filter(episode => episode.season != 6).map(episode => episode.runtime).reduce((x, y) => x + y, 0)
     }
 
     //8 - Create a function called getFirstFourSeasons that gets the episodes for the first four seasons 
     //    but only return an array of JSON objects containing the season number and episode name
+    /**
+     * 
+     * @param {JSON} json 
+     */
     function getFirstFourSeasons(json) {
-
+        return json._embedded.episodes.filter(episode => episode.season <= 4).map(episode => ({"season":episode.season, "name":episode.name}))
     }
 
     //9 - Create a function called getEpisodeTallyBySeason that returns an object containing the season name and the total episodes as key:value pairs for each season
+    /**
+     * 
+     * @param {JSON} json 
+     */
     function getEpisodeTallyBySeason(json) {
-
+        return json._embedded.episodes.reduce((counts, episode) => {
+            counts[episode.season] = (counts[episode.season] || 0) + 1;
+            return counts;
+          }, {})
     }
 
     //10 - Create a funtion called capitalizeTheFriends that transforms the episode JSON data by capitalizing the words Joey, Chandler, Monica, Rachel, Phoebe, and Ross in both 
     //the name and summary of the episodes.
+    /**
+     * 
+     * @param {JSON} json 
+     */
     function capitalizeTheFriends(json) {
-
+        let arr = json._embedded.episodes.map(episode => ({"summary":episode.summary, "name":episode.name}))
+        arr.forEach(episode => {
+            episode.summary = episode.summary.replaceAll(/Joey|Chandler|Monica|Rachel|Phoebe|Ross/gi, function(x) {
+                return x.toUpperCase()
+            })
+            episode.name = episode.name.replace(/Joey|Chandler|Monica|Rachel|Phoebe|Ross/, function(x) {
+                return x.toUpperCase()
+            })
+        });
+        return arr
     }
 
 
